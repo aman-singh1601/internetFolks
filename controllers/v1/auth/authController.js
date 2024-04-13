@@ -122,4 +122,52 @@ async function authSignin(req, res) {
     }
 }
 
-module.exports = {authSignup, authSignin}
+async function getMe(req, res) {
+    const userId = req.id;
+    
+    try {
+        const response = await Auth.findOne({
+            _id: userId
+        });
+        if(!response) {
+            return res.status(400).json({
+                status: false,
+                errors: [
+                    {
+                        param: "email",
+                        message: "User dosen't exist!",
+                        code: "INVALID_CREDENTIALS"
+                    }
+                ]
+            });
+        }
+        const {_id, name, email, createdAt} = response;
+        const data = {
+            id: _id,
+            name,
+            email,
+            created_at: createdAt,
+        }
+
+        return res.status(200).json({
+            status: true,
+            content: {
+                data : data
+            }
+        });
+        
+    } catch (error) {
+        return res.status(500).json({
+            status: false,
+            errors: [
+                {
+                    param: "Server Error",
+                    message: "Internal server error. Please try again!",
+                    code: "RESOURCE_EXISTS"
+                }
+            ]
+        })
+        
+    }
+}
+module.exports = {authSignup, authSignin, getMe};

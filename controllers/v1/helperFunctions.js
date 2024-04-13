@@ -26,8 +26,7 @@ function getResponseData(response) {
 }
 
 function validateSignupAuthData(name, password) {
-    console.log("name", name.length);
-    console.log("password", password.length);
+
     if(name.length >= 2 && password.length >= 2) return true;
 
     if(name.length < 2 && password.length < 2) {

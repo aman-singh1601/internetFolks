@@ -1,5 +1,6 @@
 const {Auth} = require("../../../models/v1/auth/authModel");
 const {Snowflake} = require("@theinternetfolks/snowflake");
+const bcrypt = require("bcrypt");
 const { getResponseData, validateSignupAuthData, validateEmail } = require("../helperFunctions");
 
 
@@ -30,11 +31,12 @@ async function authSignup(req, res) {
                 ]
             })
         }
+        let hashPassword = await bcrypt.hash(password, 10);
         const response = await Auth.create({
             _id: Snowflake.generate(),
             name, 
             email,
-            password,
+            password: hashPassword,
         })
 
 
@@ -84,26 +86,27 @@ async function authSignin(req, res) {
                     }
                 ]
             });
-        if(password!==response.password){
-            return res.status(400).json({
-                    status: false,
-                    errors: [
-                        {
-                            param: "password",
-                            message: "The credentials you provided are invalid.",
-                            code: "INVALID_CREDENTIALS"
-                        }
-                    ]
-                });
-        }
-        let content = getResponseData(response);
+        if(await bcrypt.compare(password, response.password)){
+            let content = getResponseData(response);
 
-        return res.status(200).json(
-            {
-                status: true,
-                content: content
-            }
-        )
+            return res.status(200).json(
+                {
+                    status: true,
+                    content: content
+                }
+            );
+            
+        }
+        return res.status(400).json({
+            status: false,
+            errors: [
+                {
+                    param: "password",
+                    message: "The credentials you provided are invalid.",
+                    code: "INVALID_CREDENTIALS"
+                }
+            ]
+        });
 
     } catch (error) {
         return res.status(500).json({

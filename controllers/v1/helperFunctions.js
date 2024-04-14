@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { getJoinedCommunity } = require('./community/communityController');
 require("dotenv").config();
 const SECRET_KEY = process.env.SECRET_KEY;
 function generatetoken(tokenData) {
@@ -75,6 +76,19 @@ function validateEmail(email) {
     return true;
 }
 
+// function getCreateCommunityResponse(community) {
+//     const { _id, name, owner, createdAt, updatedAt } = community;
+
+//     const data = {
+//         id: _id,
+//         name,
+//         owner,
+//         created_at: createdAt,
+//         updated_at: updatedAt
+//     }
+//     return { data};
+// }
+
 
 
 
@@ -82,14 +96,6 @@ module.exports = {
     getResponseData,
     generatetoken,
     validateSignupAuthData,
-    validateEmail
+    validateEmail,
 };
 
-// _id: '7184889420447937504',
-// name: 'aman',
-// email: 'aman16singh2001@gmail.com',
-// password: 'aman1234',
-// createdAt: 2024-04-13T12:25:26.636Z,
-// updatedAt: 2024-04-13T12:25:26.636Z,
-// __v: 0
-// }

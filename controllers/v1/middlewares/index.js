@@ -16,7 +16,7 @@ function isAuthenticated(req, res, next) {
         });
     try {
         const decoded = jwt.verify(token, SECRET_KEY);
-        console.log(decoded);
+
         req.id = decoded.id;
         next();
     } catch (error) {

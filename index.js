@@ -1,5 +1,5 @@
 const express = require('express');
-
+const cors = require('cors');
 require('dotenv').config();
 
 const routes = require('./routes');
@@ -12,6 +12,7 @@ const DB_URL = process.env.DB_URL;
 const app = express();
 
 app.use(express.urlencoded({extended: false}));
+app.use(cors());
 
 MongoDbConnect(DB_URL);
 
